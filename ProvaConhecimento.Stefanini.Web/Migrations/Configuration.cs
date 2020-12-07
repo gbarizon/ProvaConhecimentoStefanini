@@ -22,6 +22,12 @@
             //  You can use the DbSet<T>.AddOrUpdate() helper extension method
             //  to avoid creating duplicate seed data.
 
+            // Look for any customer.
+            if (context.Customers.Any())
+            {
+                return;   // DB has been seeded
+            }
+
             var users = new List<User>()
             {
                 new User() { Email = "admin@app.com", Role = "Administrador", Password = Cryptography.GetMD5("admin@123"), FullName = "Mario Jose"},
@@ -34,7 +40,7 @@
                 context.Users.AddOrUpdate(user);
             }
 
-            context.SaveChanges();            
+            context.SaveChanges();
 
             var genders = new List<Gender>()
             {
