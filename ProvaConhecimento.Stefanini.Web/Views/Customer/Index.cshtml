@@ -1,0 +1,142 @@
+﻿@model ProvaConhecimento.Stefanini.Web.ViewModel.CustomerViewModel
+
+@{
+    ViewBag.Title = "Customers";
+    WebGrid grid = new WebGrid();
+    grid.Bind(Model.Customers);
+}
+
+<style>
+    .dropdownSize {
+        width: 280px !important;
+    }
+
+    .buttonSize {
+        width: 150px !important;
+    }
+</style>
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+
+
+@section Scripts {
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#lastPurchaseId").datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+            $("#purchaseUntil").datepicker({
+                dateFormat: "dd/mm/yy"
+            });
+
+            $("#clearText").click(function () {
+                $("#CustomerFilter_Name").value = "";
+                $("#CustomerFilter_IdGender").selectIndex = 0;
+                $("#CustomerFilter_IdCity").selectIndex = 0;
+                $("#CustomerFilter_IdRegion").selectIndex = 0;
+                $("#CustomerFilter_IdClassification").selectIndex = 0;
+                $("#CustomerFilter_IdUser").selectIndex = 0;
+                $("#lastPurchase").value = "";
+                $("#purchaseUntil").value = "";
+            });
+        });       
+
+    </script>    
+}
+
+@if (Model.User.Role == "Administrador")
+{
+    using (Html.BeginForm("SearchCustomer", "Customer", FormMethod.Post))
+    {
+
+        <div class="form-group">
+            <div class="form-inline">
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.CustomerFilter.Name, "", new { @class = "form-control" })
+                </div>
+                @Html.Label("Gender", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.CustomerFilter.IdGender, Model.CustomerFilter.Genders, new { @class = "form-control dropdownSize" })
+                </div>
+                @Html.Label("City", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.CustomerFilter.IdCity, Model.CustomerFilter.Cities, new { @class = "form-control dropdownSize" })
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" name="submit" class="btn btn-primary buttonSize" value="Search" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="form-inline">
+                @Html.Label("Last Purchase", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.TextBoxFor(m => m.CustomerFilter.LastPurchase, new { @class = "form-control dropdownSize", id = "lastPurchaseId" })
+                </div>
+                @Html.Label("Until", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.CustomerFilter.PurchaseUntil, new { @class = "form-control dropdownSize", id = "purchaseUntil" })
+                </div>
+                <div class="col-md-1">
+                    <input type="reset" name="clear" class="btn btn-primary buttonSize" value="Clear Fields" id="clearText" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="form-inline">
+                @Html.Label("Region", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.CustomerFilter.IdRegion, Model.CustomerFilter.Regions, new { @class = "form-control dropdownSize  " })
+                </div>
+                @Html.Label("Classification", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.CustomerFilter.IdClassification, Model.CustomerFilter.Classifications, new { @class = "form-control dropdownSize  " })
+                </div>
+                @Html.Label("Sellers", htmlAttributes: new { @class = "control-label col-md-1" })
+                <div class="col-md-2">
+                    @Html.DropDownListFor(m => m.CustomerFilter.IdUser, Model.CustomerFilter.Users, new { @class = "form-control dropdownSize" })
+                </div>
+
+            </div>
+        </div>
+    }
+}
+
+<div style="height: 100px;"></div>
+
+@if (Model.User.Role == "Administrador")
+{
+    @grid.GetHtml(tableStyle: "table table-bordered",
+    columns: grid.Columns(
+    grid.Column("Classification.Name", " Classification"),
+    grid.Column("Name", "Name"),
+    grid.Column("Phone", "Phone"),
+    grid.Column("Gender.Description", "Gender"),
+    grid.Column("City.Name", "City"),
+    grid.Column("Region.Name", "Region"),
+    grid.Column("LastPurchase", "Last Purchase", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.LastPurchase)),
+    grid.Column("User.FullName", "Seller")
+    ))
+}
+else
+{
+    @grid.GetHtml(tableStyle: "table table-bordered",
+    columns: grid.Columns(
+    grid.Column("Classification.Name", " Classification"),
+    grid.Column("Name", "Name"),
+    grid.Column("Phone", "Phone"),
+    grid.Column("Gender.Description", "Gender"),
+    grid.Column("City.Name", "City"),
+    grid.Column("Region.Name", "Region"),
+    grid.Column("LastPurchase", "Last Purchase", format: (item) => string.Format("{0:dd-MMM-yyyy}", item.LastPurchase))
+    ))
+}
+
+

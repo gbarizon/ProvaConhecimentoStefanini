@@ -1,0 +1,26 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/Content/bootstrap.min.css" />
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>   
+    @RenderSection("scripts", required: false)
+</head>
+<body>
+    <div class="header">
+        <!--code header fixed-->
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+    <div class="footer">
+        <!--code footer fixed-->
+    </div>
+
+    
+</body>
+</html>
